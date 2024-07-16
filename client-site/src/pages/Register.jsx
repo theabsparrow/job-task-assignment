@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from '../../src/assets/Logo.png'
+import useAxiosPublic from "../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
 
 
 const Register = () => {
     const [error, setError] = useState('');
-    const [displayPass, setDisplayPass] = useState(false);
-    const [displayConfirmPass, setDisplayConfirmPass] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState(false);
+    const axiosPublic = useAxiosPublic()
+    const navigate = useNavigate();
 
-    const handleRegister = (e) => {
+
+    const handleRegister = async (e) => {
         e.preventDefault();
         const name = e.target.name.value;
         const email = e.target.email.value;
@@ -20,7 +23,6 @@ const Register = () => {
         const role = e.target.role.value
         const password = e.target.password.value;
         const conirmPass = e.target.conirmPass.value;
-        console.log(name, email, phoneNum, role, password, conirmPass);
         setError("")
 
         if (!/[0-9]/.test(password)) {
@@ -36,16 +38,50 @@ const Register = () => {
             return
         }
 
+        const userInfo = {
+            userName: name,
+            userEmail: email,
+            userPhoneNum: phoneNum,
+            UserRole: role,
+            userPassword: password,
+        }
+        try {
+            const { data } = await axiosPublic.post('/user', userInfo);
+            if (data.insertedId) {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "you have successfully regestered",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                e.target.reset()
+                navigate('/login')
+            }
+            else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: data.message
+                  });
+            }
+
+        }
+
+        catch (error) {
+            console.log(error)
+        }
+
     }
 
 
 
     return (
-        <div className="bg-[#004aad] min-h-screen flex justify-center items-center">
+        <div className="bg-[#004aad] min-h-screen flex justify-center items-center font-roboto">
             <Helmet>
                 <title>Dune || Register</title>
             </Helmet>
-            <div className="w-[25vw] bg-[#38B6FF] rounded-xl">
+            <div className="w-[25vw] bg-[#38B6FF] rounded-xl pb-3">
                 <form onSubmit={handleRegister} className="px-5 py-3">
 
                     {/* name */}
@@ -112,9 +148,12 @@ const Register = () => {
                     </div>
 
                     <div className="form-control mt-6">
-                        <button className="btn btn-primary">Login</button>
+                        <button className="btn btn-primary">Register</button>
                     </div>
                 </form>
+                <div className="flex justify-center">
+                    <span>Already have an account? <Link to='/login'>Login</Link></span>
+                </div>
             </div>
         </div>
     );
