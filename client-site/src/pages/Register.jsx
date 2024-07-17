@@ -21,6 +21,7 @@ const Register = () => {
         const email = e.target.email.value;
         const phoneNum = e.target.phoneNum.value;
         const role = e.target.role.value
+        const status = 'pending'
         const password = e.target.password.value;
         const conirmPass = e.target.conirmPass.value;
         setError("")
@@ -42,7 +43,8 @@ const Register = () => {
             userName: name,
             userEmail: email,
             userPhoneNum: phoneNum,
-            UserRole: role,
+            userRole: role,
+            userStatus: status,
             userPassword: password,
         }
         try {

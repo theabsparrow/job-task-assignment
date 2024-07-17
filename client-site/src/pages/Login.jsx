@@ -1,18 +1,53 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useAxiosPublic from "../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
 
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
+    // const [error, setError] = useState('');
+    const axiosPublic = useAxiosPublic();
+    const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         const user = e.target.emailOrNum.value;
         const password = e.target.password.value;
-        console.log(user, password)
+        const loginInfo = {
+            userInfo: user,
+            userPass: password
+        }
+
+        try {
+            const { data } = await axiosPublic.post('/login', loginInfo, {withCredentials: true});
+            console.log(data)
+            // if (data.insertedId) {
+            //     Swal.fire({
+            //         position: "top-end",
+            //         icon: "success",
+            //         title: "you have successfully regestered",
+            //         showConfirmButton: false,
+            //         timer: 1500
+            //     });
+            //     e.target.reset()
+                navigate('/')
+            // }
+            // else {
+            //     Swal.fire({
+            //         icon: "error",
+            //         title: "Oops...",
+            //         text: data.message
+            //     });
+            // }
+
+        }
+
+        catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -29,7 +64,7 @@ const Login = () => {
                             <span className="label-text">Mobile number or email address *</span>
                         </label>
                         <input type="text" name="emailOrNum" placeholder="Type your mobile number or email" className="input input-bordered" required />
-                    </div>        
+                    </div>
 
                     {/* password */}
                     <div className="relative form-control">
