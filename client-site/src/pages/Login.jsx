@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 
@@ -11,6 +11,7 @@ const Login = () => {
     // const [error, setError] = useState('');
     const axiosPublic = useAxiosPublic();
     const navigate = useNavigate();
+    const location = useLocation()
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -23,25 +24,23 @@ const Login = () => {
 
         try {
             const { data } = await axiosPublic.post('/login', loginInfo, {withCredentials: true});
-            console.log(data)
-            // if (data.insertedId) {
-            //     Swal.fire({
-            //         position: "top-end",
-            //         icon: "success",
-            //         title: "you have successfully regestered",
-            //         showConfirmButton: false,
-            //         timer: 1500
-            //     });
-            //     e.target.reset()
-                navigate('/')
-            // }
-            // else {
-            //     Swal.fire({
-            //         icon: "error",
-            //         title: "Oops...",
-            //         text: data.message
-            //     });
-            // }
+            if (data.success) {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "you have successfully regestered",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                navigate(location?.state? location.state: '/')            
+            }
+            else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: data.message
+                });
+            }
 
         }
 
