@@ -149,22 +149,17 @@ async function run() {
             res.send({ success: true });
         });
 
-
+        // get users route
         app.get('/user-info', verifyToken, async (req, res) => {
             try {
-                const userId = req.user.userId; // Assuming userId is set in token payload
-
-
-                // Fetch user data from database based on userId
+                const userId = req.user.userId;
                 const cursor = { _id: new ObjectId(userId) };
-
                 const user = await usersCollection.findOne(cursor);
 
                 if (!user) {
                     return res.status(404).send({ message: 'User not found' });
                 }
 
-                // Exclude sensitive information (e.g., password) from response
                 const { userPassword, ...userInfo } = user;
                 res.send(userInfo);
             } catch (error) {
@@ -173,7 +168,11 @@ async function run() {
             }
         });
 
-
+        app.get('/users', verifyToken, async(req, res) => {
+            const cursor = usersCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });

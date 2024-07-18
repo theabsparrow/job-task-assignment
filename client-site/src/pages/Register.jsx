@@ -24,14 +24,15 @@ const Register = () => {
         const status = 'pending'
         const password = e.target.password.value;
         const conirmPass = e.target.conirmPass.value;
+        const money = 0;
         setError("")
 
         if (!/[0-9]/.test(password)) {
             setError("your PIN should be number")
             return
         }
-        else if (password.length < 6) {
-            setError('Your PIN must be 6 character')
+        else if (password.length < 5) {
+            setError('Your PIN must be 5 character')
             return
         }
         else if (password !== conirmPass) {
@@ -46,6 +47,7 @@ const Register = () => {
             userRole: role,
             userStatus: status,
             userPassword: password,
+            balance: money,
         }
         try {
             const { data } = await axiosPublic.post('/user', userInfo);
@@ -115,7 +117,7 @@ const Register = () => {
                         <label className="label">
                             <span>Select Role</span>
                         </label>
-                        <select name="role" id="role" className="outline-none">
+                        <select name="role" id="role" className="outline-none" required>
                             <option value="">Select Role</option>
                             <option value="User">User</option>
                             <option value="Agent">Agent</option>
@@ -127,7 +129,7 @@ const Register = () => {
                         <label className="label">
                             <span className="label-text">PIN *</span>
                         </label>
-                        <input type={showPassword ? "text" : "password"} name="password" placeholder="PIN" className="input input-bordered" maxLength='6' required />
+                        <input type={showPassword ? "text" : "password"} name="password" placeholder="PIN" className="input input-bordered" maxLength='5' required />
                         <span onClick={() => setShowPassword(!showPassword)} className='text-xl absolute right-2 top-12'>
                             {showPassword ? <IoEyeOff></IoEyeOff> : <IoEye></IoEye>}
                         </span>
@@ -138,7 +140,7 @@ const Register = () => {
                         <label className="label">
                             <span className="label-text">Confirm PIN *</span>
                         </label>
-                        <input type={confirmPassword ? "text" : "password"} name="conirmPass" placeholder="confirm PIN" className="input input-bordered" maxLength='6' required />
+                        <input type={confirmPassword ? "text" : "password"} name="conirmPass" placeholder="confirm PIN" className="input input-bordered" maxLength='5' required />
                         <span onClick={() => setConfirmPassword(!confirmPassword)} className='text-xl absolute right-2 top-12'>
                             {confirmPassword ? <IoEyeOff></IoEyeOff> : <IoEye></IoEye>}
                         </span>
@@ -154,7 +156,7 @@ const Register = () => {
                     </div>
                 </form>
                 <div className="flex justify-center">
-                    <span>Already have an account? <Link to='/login'>Login</Link></span>
+                    <span>Already have an account? <Link to='/'>Login</Link></span>
                 </div>
             </div>
         </div>

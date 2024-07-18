@@ -32,7 +32,7 @@ const Login = () => {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                navigate(location?.state? location.state: '/')            
+                navigate(location?.state? location.state: '/home')            
             }
             else {
                 Swal.fire({
@@ -70,7 +70,7 @@ const Login = () => {
                         <label className="label">
                             <span className="label-text">PIN *</span>
                         </label>
-                        <input type={showPassword ? "text" : "password"} name="password" placeholder="PIN" className="input input-bordered" maxLength='6' required />
+                        <input type={showPassword ? "text" : "password"} name="password" placeholder="PIN" className="input input-bordered" maxLength='5' required />
                         <span onClick={() => setShowPassword(!showPassword)} className='text-xl absolute right-2 top-12'>
                             {showPassword ? <IoEyeOff></IoEyeOff> : <IoEye></IoEye>}
                         </span>

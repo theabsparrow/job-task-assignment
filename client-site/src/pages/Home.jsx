@@ -5,26 +5,23 @@ import useUser from "../hooks/useUser";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { useEffect } from "react";
 
-
 const Home = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
     const axiosSecure = useAxiosSecure();
+    const { user, refetch } = useUser();
 
-    const {users, refetch} = useUser();
-
-    console.log(users)
     useEffect(() => {
-        if (!users) {
-            refetch(); 
+        if (!user) {
+            refetch();
         }
-    }, [users, refetch]);
+    }, [user, refetch]);
 
     const handleLogout = async () => {
         try {
             await axiosSecure.post('/logout');
             logout();
-            navigate('/login')
+            navigate('/')
         } catch (error) {
             console.error('Error during logout:', error);
         }
@@ -33,14 +30,16 @@ const Home = () => {
     return (
         <div className="flex flex-col justify-center items-center">
             {
-                users && <button onClick={handleLogout} className="btn btn-primary">Logout</button>
+                user && <button onClick={handleLogout} className="btn btn-primary">Logout</button>
             }
 
             <div className="flex flex-col items-center mt-5 border">
-                <h1>{users?.userName}</h1>
-                <h1>{users?.userEmail}</h1>
-                <h1>{users?.userPhoneNum}</h1>
-            </div>
+                <h1>{user?.userName}</h1>
+                <h1>{user?.userEmail}</h1>
+                <h1>{user?.userPhoneNum}</h1>
+                <h1>{user?.userRole}</h1>
+                <h1>{user?.userStatus}</h1>
+            </div>           
         </div>
     );
 };

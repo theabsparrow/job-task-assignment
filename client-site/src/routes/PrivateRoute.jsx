@@ -3,19 +3,18 @@ import useUser from "../hooks/useUser";
 import PropTypes from 'prop-types';
 
 const PrivateRoute = ({children }) => {
-    const {users, isLoading} = useUser();
-// const location = useLocation();
+    const {user, isLoading} = useUser();
+const location = useLocation();
 
-console.log(users)
 if(isLoading){
     return 
 }
 
-else if(users){
+else if(user){
     return children
 }
 else{
-    return <Navigate state = {location.pathname} to='/login' replace={true}></Navigate>
+    return <Navigate state = {location.pathname} to='/' replace={true}></Navigate>
 }
 
 };
